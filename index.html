@@ -999,111 +999,6 @@
       0% { transform: scale(0.6); opacity: 0.9; }
       100% { transform: scale(2); opacity: 0; }
     }
-
-    /* --- COMPASS UNAVAILABLE WARNING BADGE --- */
-    .compass-warning {
-      position: absolute;
-      top: 76px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 30;
-      background: #1e3a8a;
-      color: #ffffff;
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      box-shadow: 0 4px 16px rgba(30, 58, 138, 0.3);
-      border-bottom: 3px solid #e11d48;
-      white-space: nowrap;
-      display: none;
-      pointer-events: none;
-    }
-
-    /* --- CAMERA FOCUS LOCK BADGE --- */
-    .focus-lock-badge {
-      position: absolute;
-      top: 118px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 30;
-      background: rgba(30, 58, 138, 0.95);
-      color: #ffffff;
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      box-shadow: 0 4px 16px rgba(30, 58, 138, 0.3);
-      border-bottom: 3px solid #38bdf8;
-      white-space: nowrap;
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .focus-lock-badge.show {
-      display: flex;
-    }
-
-    .focus-lock-badge button {
-      background: rgba(255, 255, 255, 0.25);
-      border: none;
-      color: #ffffff;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      font-size: 13px;
-      line-height: 1;
-      cursor: pointer;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* --- OUT-OF-BOUNDS WARNING BANNER --- */
-    .oob-banner {
-      position: absolute;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 30;
-      background: #e11d48;
-      color: #ffffff;
-      padding: 9px 16px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 700;
-      box-shadow: 0 4px 16px rgba(225, 29, 72, 0.35);
-      border-bottom: 3px solid #1e3a8a;
-      display: none;
-      align-items: center;
-      gap: 10px;
-      max-width: calc(100vw - 300px);
-      text-align: center;
-    }
-
-    .oob-banner.show {
-      display: flex;
-    }
-
-    .oob-banner button {
-      background: rgba(255, 255, 255, 0.25);
-      border: none;
-      color: #ffffff;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
   </style>
 </head>
 <body>
@@ -1159,21 +1054,6 @@
 
   <!-- Mode Status Indicator (Clickable to Toggle Modes) -->
   <div id="mode-indicator" class="mode-indicator">Mode: Live GPS</div>
-
-  <!-- Compass Unavailable Warning Badge -->
-  <div id="compass-warning" class="compass-warning">Compass unavailable — using map heading</div>
-
-  <!-- Camera Focus Lock Badge -->
-  <div id="focus-lock-badge" class="focus-lock-badge">
-    <span id="focus-lock-label"></span>
-    <button id="focus-lock-release" type="button" title="Unlock camera">&times;</button>
-  </div>
-
-  <!-- Out-of-Bounds Warning Banner -->
-  <div id="oob-banner" class="oob-banner">
-    <span>You are outside the mapped campus area. Position clamped.</span>
-    <button id="oob-dismiss" type="button">&times;</button>
-  </div>
 
   <!-- Left Joystick (Movement) for Manual Mode -->
   <div id="joystick-left" class="joystick-container">
@@ -1342,6 +1222,7 @@
     const ROUTE_LDC_GEOJSON = {
       "type": "FeatureCollection",
       "features": [
+        { "type": "Feature", "properties": {}, "geometry": { "type": "LineString", "coordinates": [] } },
         {
           "type": "Feature",
           "properties": {},
@@ -1362,6 +1243,7 @@
     const ROUTE_BLOCK_D_GEOJSON = {
       "type": "FeatureCollection",
       "features": [
+        { "type": "Feature", "properties": {}, "geometry": { "type": "LineString", "coordinates": [] } },
         {
           "type": "Feature",
           "properties": {},
@@ -1381,6 +1263,7 @@
     const ROUTE_BLOCK_C_GEOJSON = {
       "type": "FeatureCollection",
       "features": [
+        { "type": "Feature", "properties": {}, "geometry": { "type": "LineString", "coordinates": [] } },
         {
           "type": "Feature",
           "properties": {},
@@ -1401,6 +1284,7 @@
     const ROUTE_BLOCK_B_GEOJSON = {
       "type": "FeatureCollection",
       "features": [
+        { "type": "Feature", "properties": {}, "geometry": { "type": "LineString", "coordinates": [] } },
         {
           "type": "Feature",
           "properties": {},
@@ -1422,6 +1306,7 @@
     const ROUTE_BLOCK_A_GEOJSON = {
       "type": "FeatureCollection",
       "features": [
+        { "type": "Feature", "properties": {}, "geometry": { "type": "LineString", "coordinates": [] } },
         {
           "type": "Feature",
           "properties": {},
@@ -1663,13 +1548,8 @@
     let watchId = null;
 
     // FPV Dynamic Focus Lock variables
-    const LOCK_PITCH = 80;           // over-shoulder framing pitch while locked
-    const LOCK_FRAME_SPAN = 0.55;    // vertical viewport span between user and target
-    const AUTO_FRAME_MIN_ZOOM = 16;  // never zoom out past this while locked
-    const AUTO_FRAME_MAX_ZOOM = 19.5;
     let isCameraFocusLocked = false;
-    let cameraFocusDiving = false;   // protects the dive/pitch-settle animation
-    let lastLockedBearing = null;    // stable user->building bearing while locked
+    let cameraFocusTimer = null;
 
     const modeIndicator = document.getElementById('mode-indicator');
     const joystickLeft = document.getElementById('joystick-left');
@@ -1681,10 +1561,6 @@
     const blockSelectModal = document.getElementById('block-select-modal');
     const legendsToggleBtn = document.getElementById('legends-toggle-btn');
     const legendsPopup = document.getElementById('legends-popup');
-    const compassWarning = document.getElementById('compass-warning');
-    const outOfBoundsBanner = document.getElementById('oob-banner');
-    const focusLockBadge = document.getElementById('focus-lock-badge');
-    const focusLockLabel = document.getElementById('focus-lock-label');
 
     let dashOffset = 0;
     let dashAnimationId = null;
@@ -1692,16 +1568,12 @@
     // Cuboid Elevation Animation State
     let cuboidAnimFrame = null;
     let currentCuboidHeight = 0;
-    let cuboidFadeFrame = null;
-    let cuboidHasRisen = false; // full rise plays once per session
-    const CUBOID_RISE_DURATION = 3000; // ms
-    const CUBOID_TARGET_HEIGHT = 25;
 
     function animateCuboidElevation(targetHeight) {
       if (cuboidAnimFrame) cancelAnimationFrame(cuboidAnimFrame);
       
       const startTime = performance.now();
-      const duration = CUBOID_RISE_DURATION;
+      const duration = 1200; // ms
       const startHeight = currentCuboidHeight;
 
       function step(currentTime) {
@@ -1718,62 +1590,10 @@
 
         if (progress < 1) {
           cuboidAnimFrame = requestAnimationFrame(step);
-        } else {
-          cuboidAnimFrame = null;
         }
       }
 
       cuboidAnimFrame = requestAnimationFrame(step);
-    }
-
-    // --- CUBOID FADE-OUT (DESELECT) ---
-    function cancelCuboidAnimations() {
-      if (cuboidAnimFrame) {
-        cancelAnimationFrame(cuboidAnimFrame);
-        cuboidAnimFrame = null;
-      }
-      if (cuboidFadeFrame) {
-        cancelAnimationFrame(cuboidFadeFrame);
-        cuboidFadeFrame = null;
-      }
-    }
-
-    function fadeOutCuboid() {
-      cancelCuboidAnimations();
-
-      if (!map.getLayer('custom-cuboid-layer')) return;
-
-      const startTime = performance.now();
-      const duration = 600; // ms
-      const startOpacity = 0.85;
-
-      function step(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const opacity = startOpacity * (1 - progress);
-
-        if (map.getLayer('custom-cuboid-layer')) {
-          map.setPaintProperty('custom-cuboid-layer', 'fill-extrusion-opacity', opacity);
-        }
-
-        if (progress < 1) {
-          cuboidFadeFrame = requestAnimationFrame(step);
-        } else {
-          cuboidFadeFrame = null;
-
-          currentCuboidHeight = 0;
-          CUBOID_3D_GEOJSON.features[0].properties.height = 0;
-          if (map.getSource('custom-cuboid-source')) {
-            map.getSource('custom-cuboid-source').setData(CUBOID_3D_GEOJSON);
-          }
-          if (map.getLayer('custom-cuboid-layer')) {
-            map.setLayoutProperty('custom-cuboid-layer', 'visibility', 'none');
-            map.setPaintProperty('custom-cuboid-layer', 'fill-extrusion-opacity', 0.85);
-          }
-        }
-      }
-
-      cuboidFadeFrame = requestAnimationFrame(step);
     }
 
     // --- DEVICE ORIENTATION COMPASS HEADING LISTENER ---
@@ -1787,13 +1607,11 @@
         heading = 360 - e.alpha; // Android Compass fallback
       }
 
-      hasCompassHeading = heading !== null && !isNaN(heading);
-      if (hasCompassHeading) {
+      if (heading !== null && !isNaN(heading)) {
         userHeading = heading;
         updateVisionConeOrientation();
-        followCamera();
+        if (isFPVEnabled && !isCameraFocusLocked) updateFPVCamera();
       }
-      updateHeadingAvailability();
     }
 
     function initDeviceOrientation() {
@@ -1812,94 +1630,27 @@
       }
     }
 
-    // --- GPS POSITION SMOOTHING, HEADING RESOLUTION & OOB DETECTION ---
-    let hasCompassHeading = false;
-    let hasGpsHeading = false;
-    let wasOutOfBounds = false;
-    let oobDismissed = false;
-
-    const GPS_SMOOTH_ALPHA_MIN = 0.25; // heavy smoothing for idle GPS jitter
-    const GPS_SMOOTH_ALPHA_MAX = 0.7;  // responsive while walking
-    const GPS_DEADBAND = 0.0000045;   // ~0.5m in degrees
-    const ON_NETWORK_THRESHOLD = GPS_DEADBAND * 4; // ~2m from path -> hide helper line
-
-    function updateOutOfBoundsState(out) {
-      if (!out) {
-        if (wasOutOfBounds) {
-          wasOutOfBounds = false;
-          oobDismissed = false;
-        }
-        outOfBoundsBanner.classList.remove('show');
-        return;
-      }
-      if (oobDismissed) return;
-      if (!wasOutOfBounds) {
-        wasOutOfBounds = true;
-        outOfBoundsBanner.classList.add('show');
-      }
-    }
-
-    function updateHeadingAvailability() {
-      if (controlMode === 'manual') {
-        compassWarning.style.display = 'none';
-        return;
-      }
-      if (hasCompassHeading || hasGpsHeading) {
-        compassWarning.style.display = 'none';
-      } else {
-        compassWarning.style.display = 'block';
-        userHeading = map.getBearing();
-        updateVisionConeOrientation();
-      }
-    }
-
-    function applyGpsFix(lng, lat, heading) {
-      const outOfBounds = lng < BOUNDING_BOX[0][0] || lng > BOUNDING_BOX[1][0] ||
-                          lat < BOUNDING_BOX[0][1] || lat > BOUNDING_BOX[1][1];
-      updateOutOfBoundsState(outOfBounds);
-
-      if (heading !== null && !isNaN(heading)) {
-        hasGpsHeading = true;
-        if (controlMode === 'gps') userHeading = heading;
-      }
-
-      if (typeof userMarker === 'undefined') return;
-
-      const clampedLng = Math.max(BOUNDING_BOX[0][0], Math.min(BOUNDING_BOX[1][0], lng));
-      const clampedLat = Math.max(BOUNDING_BOX[0][1], Math.min(BOUNDING_BOX[1][1], lat));
-
-      const dx = clampedLng - currentUserCoords[0];
-      const dy = clampedLat - currentUserCoords[1];
-      const dist = Math.hypot(dx, dy);
-
-      if (dist > GPS_DEADBAND) {
-        // Adaptive alpha: small fixes (idle jitter) stay heavily smoothed, while large
-        // fixes (walking) track tightly so the FPV camera doesn't lag into turns.
-        const alpha = Math.min(GPS_SMOOTH_ALPHA_MAX, GPS_SMOOTH_ALPHA_MIN +
-          (dist / GPS_DEADBAND) * 0.35);
-        currentUserCoords[0] += dx * alpha;
-        currentUserCoords[1] += dy * alpha;
-
-        userMarker.setLngLat(currentUserCoords);
-        updateVisionConeOrientation();
-        updateStraightLine();
-        updateNearestEntryMarker();
-        updateActiveRouteLine();
-        followCamera();
-      }
-
-      updateHeadingAvailability();
-    }
-
-    document.getElementById('oob-dismiss').addEventListener('click', () => {
-      oobDismissed = true;
-      outOfBoundsBanner.classList.remove('show');
-    });
-
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          applyGpsFix(position.coords.longitude, position.coords.latitude, position.coords.heading);
+          const lng = position.coords.longitude;
+          const lat = position.coords.latitude;
+          
+          currentUserCoords[0] = Math.max(BOUNDING_BOX[0][0], Math.min(BOUNDING_BOX[1][0], lng));
+          currentUserCoords[1] = Math.max(BOUNDING_BOX[0][1], Math.min(BOUNDING_BOX[1][1], lat));
+
+          if (position.coords.heading !== null && !isNaN(position.coords.heading)) {
+            userHeading = position.coords.heading;
+          }
+
+          if (typeof userMarker !== 'undefined') {
+            userMarker.setLngLat(currentUserCoords);
+            updateVisionConeOrientation();
+            updateStraightLine();
+            updateNearestEntryMarker();
+            updateActiveRouteLine();
+            if (isFPVEnabled && !isCameraFocusLocked) updateFPVCamera();
+          }
         },
         (error) => {
           console.warn("Initial GPS position acquisition failed.", error);
@@ -2162,9 +1913,9 @@
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
           'line-color': '#e11d48',
-          'line-width': 2,
+          'line-width': 2.5,
           'line-dasharray': [3, 3],
-          'line-opacity': 0.5
+          'line-opacity': 0.9
         }
       });
 
@@ -2232,74 +1983,7 @@
       });
     }
 
-    // Follow camera respects the cinematic focus lock: while a block is selected the
-    // camera frames an over-the-shoulder view with the user as the foreground subject
-    // (lower part of the frame) and the selected building further back (upper/center),
-    // re-framing as the user moves so both stay in view. The lock is never cancelled by
-    // movement; it only ends via releaseCameraFocus() (compass press, FPV toggle) or a
-    // new selection.
-    function followCamera() {
-      if (!isFPVEnabled) return;
-      if (cameraFocusDiving) return;
-      if (isCameraFocusLocked) {
-        updateLockedCamera();
-      } else {
-        updateFPVCamera();
-      }
-    }
-
-    function releaseCameraFocus() {
-      isCameraFocusLocked = false;
-      cameraFocusDiving = false;
-      lastLockedBearing = null;
-      if (focusLockBadge) focusLockBadge.classList.remove('show');
-    }
-
-    function updateLockedCamera() {
-      if (!selectedLocationKey) return;
-      const targetBlock = BLOCKS[selectedLocationKey];
-      if (!targetBlock) return;
-
-      // Over-shoulder framing: look from the user toward the building, camera centered
-      // on the midpoint so the user appears in the foreground and the target behind.
-      const bearingToTarget = calculateBearing(
-        currentUserCoords[0], currentUserCoords[1],
-        targetBlock.coords[0], targetBlock.coords[1]
-      );
-      if (!isNaN(bearingToTarget)) lastLockedBearing = bearingToTarget;
-      if (lastLockedBearing === null) lastLockedBearing = map.getBearing();
-
-      const center = [
-        (currentUserCoords[0] + targetBlock.coords[0]) / 2,
-        (currentUserCoords[1] + targetBlock.coords[1]) / 2
-      ];
-
-      map.jumpTo({
-        center: center,
-        pitch: LOCK_PITCH,
-        bearing: lastLockedBearing,
-        zoom: map.getZoom()
-      });
-
-      // Auto-frame: keep both on the screen's vertical axis (user low, target high) by
-      // fitting their projected span to a fixed fraction of the viewport height.
-      const userPt = map.project(currentUserCoords);
-      const buildPt = map.project(targetBlock.coords);
-      const span = Math.abs(userPt.y - buildPt.y);
-      const desiredSpan = map.getContainer().clientHeight * LOCK_FRAME_SPAN;
-      const zoom = Math.min(AUTO_FRAME_MAX_ZOOM, Math.max(AUTO_FRAME_MIN_ZOOM,
-        map.getZoom() + Math.log2(desiredSpan / Math.max(span, 1))));
-
-      map.jumpTo({
-        center: center,
-        pitch: LOCK_PITCH,
-        bearing: lastLockedBearing,
-        zoom: zoom
-      });
-    }
-
     function toggleFPVMode(enabled) {
-      releaseCameraFocus();
       if (enabled) {
         map.easeTo({
           center: currentUserCoords,
@@ -2325,7 +2009,6 @@
         e.stopPropagation();
 
         if (isFPVEnabled) {
-          releaseCameraFocus();
           updateFPVCamera();
         } else {
           map.flyTo({
@@ -2339,11 +2022,6 @@
         }
       }, true);
     }
-
-    document.getElementById('focus-lock-release').addEventListener('click', () => {
-      releaseCameraFocus();
-      updateFPVCamera();
-    });
 
     // --- GALLERY POPUP PANEL LOGIC ---
     const galleryToggleBtn = document.getElementById('gallery-toggle-btn');
@@ -2501,26 +2179,23 @@
       return [x1 + t * dx, y1 + t * dy];
     }
 
-    function getRouteCoords(route) {
-      if (!route || !route.features || route.features.length === 0) return null;
-      return route.features[0].geometry.coordinates;
-    }
-
     function getNearestNetworkPoint(coord) {
       let closestPoint = coord;
       let minDistanceSq = Infinity;
 
       const targetBlock = BLOCKS[selectedLocationKey];
-      const lineCoords = targetBlock && getRouteCoords(targetBlock.route);
-      if (lineCoords && lineCoords.length > 1) {
-        for (let i = 0; i < lineCoords.length - 1; i++) {
-          const projected = getClosestPointOnSegment(coord, lineCoords[i], lineCoords[i + 1]);
-          const distSq = calculateDistanceSq(coord, projected);
-          if (distSq < minDistanceSq) {
-            minDistanceSq = distSq;
-            closestPoint = projected;
+      if (targetBlock && targetBlock.route) {
+        targetBlock.route.features.forEach(feature => {
+          const lineCoords = feature.geometry.coordinates;
+          for (let i = 0; i < lineCoords.length - 1; i++) {
+            const projected = getClosestPointOnSegment(coord, lineCoords[i], lineCoords[i + 1]);
+            const distSq = calculateDistanceSq(coord, projected);
+            if (distSq < minDistanceSq) {
+              minDistanceSq = distSq;
+              closestPoint = projected;
+            }
           }
-        }
+        });
       }
 
       return closestPoint;
@@ -2607,23 +2282,12 @@
 
       const nearestNetworkPoint = getNearestNetworkPoint(currentUserCoords);
 
-      // This line is the "get onto the path" hint (user -> nearest route point). Once
-      // the user is essentially on the network, it's redundant with the route line, so
-      // clear it to reduce visual clutter.
-      const distanceToNetwork = Math.hypot(
-        nearestNetworkPoint[0] - currentUserCoords[0],
-        nearestNetworkPoint[1] - currentUserCoords[1]
-      );
-      const coordinates = distanceToNetwork <= ON_NETWORK_THRESHOLD
-        ? []
-        : [currentUserCoords, nearestNetworkPoint];
-
       map.getSource('straight-line-source').setData({
         type: 'Feature',
         properties: {},
         geometry: {
           type: 'LineString',
-          coordinates: coordinates
+          coordinates: [currentUserCoords, nearestNetworkPoint]
         }
       });
     }
@@ -2635,7 +2299,7 @@
       const targetBlock = BLOCKS[selectedLocationKey];
 
       if (activeRouteSource && targetBlock && targetBlock.route) {
-        const fullRoute = getRouteCoords(targetBlock.route);
+        const fullRoute = targetBlock.route.features[1]?.geometry?.coordinates;
         if (!fullRoute || fullRoute.length === 0) return;
 
         let closestSegmentIndex = 0;
@@ -2660,6 +2324,7 @@
         activeRouteSource.setData({
           type: 'FeatureCollection',
           features: [
+            { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: [] } },
             {
               type: 'Feature',
               properties: {},
@@ -2691,25 +2356,10 @@
         if (map.getLayer('custom-cuboid-layer')) {
           if (selectedKey === 'block_c') {
             map.setLayoutProperty('custom-cuboid-layer', 'visibility', 'visible');
-            map.setPaintProperty('custom-cuboid-layer', 'fill-extrusion-opacity', 0.85);
-            if (cuboidHasRisen) {
-              // Already rose once this session: snap straight to full height.
-              currentCuboidHeight = CUBOID_TARGET_HEIGHT;
-              CUBOID_3D_GEOJSON.features[0].properties.height = CUBOID_TARGET_HEIGHT;
-              if (map.getSource('custom-cuboid-source')) {
-                map.getSource('custom-cuboid-source').setData(CUBOID_3D_GEOJSON);
-              }
-            } else {
-              currentCuboidHeight = 0;
-              CUBOID_3D_GEOJSON.features[0].properties.height = 0;
-              if (map.getSource('custom-cuboid-source')) {
-                map.getSource('custom-cuboid-source').setData(CUBOID_3D_GEOJSON);
-              }
-              animateCuboidElevation(CUBOID_TARGET_HEIGHT);
-              cuboidHasRisen = true;
-            }
+            animateCuboidElevation(25); // Animate cuboid height going up smoothly
           } else {
-            fadeOutCuboid();
+            map.setLayoutProperty('custom-cuboid-layer', 'visibility', 'none');
+            animateCuboidElevation(0);
           }
         }
 
@@ -2720,38 +2370,35 @@
         closeGalleryPanel();
 
         // --- CAMERA FOCUS LOCK UPON SELECTION IN FPV MODE ---
-        // Cinematic dive into the over-shoulder framing (user foreground, target behind),
-        // then hold the lock, auto-framing as the user moves.
         if (isFPVEnabled) {
-          releaseCameraFocus();
+          if (cameraFocusTimer) clearTimeout(cameraFocusTimer);
           isCameraFocusLocked = true;
-          cameraFocusDiving = true;
-          const lockedKey = selectedKey;
-          focusLockLabel.textContent = `Locked on ${targetBlock.name}`;
-          focusLockBadge.classList.add('show');
 
           const bearingToTarget = calculateBearing(
             currentUserCoords[0], currentUserCoords[1],
             targetBlock.coords[0], targetBlock.coords[1]
           );
-          lastLockedBearing = bearingToTarget;
 
+          // Pitch set as low to the ground as possible (85 degrees) and yaw pointing towards destination
           map.easeTo({
-            center: [
-              (currentUserCoords[0] + targetBlock.coords[0]) / 2,
-              (currentUserCoords[1] + targetBlock.coords[1]) / 2
-            ],
-            pitch: LOCK_PITCH,
+            center: currentUserCoords,
+            pitch: 85,
             bearing: bearingToTarget,
             zoom: 19.5,
             duration: 1200
           });
 
-          map.once('moveend', () => {
-            if (!isCameraFocusLocked || selectedLocationKey !== lockedKey) return;
-            cameraFocusDiving = false;
-            updateLockedCamera();
-          });
+          // Hold cinematic focus for a moment, then smoothly ease back to user/device orientation and default pitch (60)
+          cameraFocusTimer = setTimeout(() => {
+            map.easeTo({
+              pitch: DEFAULT_PITCH,
+              bearing: userHeading,
+              duration: 1000
+            });
+            setTimeout(() => {
+              isCameraFocusLocked = false;
+            }, 1000);
+          }, 2400); // 1.2s animation + 1.2s hold = 2400ms
         }
       }
     }
@@ -2875,7 +2522,25 @@
         watchId = navigator.geolocation.watchPosition(
           (position) => {
             if (controlMode === 'gps') {
-              applyGpsFix(position.coords.longitude, position.coords.latitude, position.coords.heading);
+              const lng = position.coords.longitude;
+              const lat = position.coords.latitude;
+              
+              currentUserCoords[0] = Math.max(BOUNDING_BOX[0][0], Math.min(BOUNDING_BOX[1][0], lng));
+              currentUserCoords[1] = Math.max(BOUNDING_BOX[0][1], Math.min(BOUNDING_BOX[1][1], lat));
+
+              if (position.coords.heading !== null && !isNaN(position.coords.heading)) {
+                userHeading = position.coords.heading;
+              }
+
+              userMarker.setLngLat(currentUserCoords);
+              updateVisionConeOrientation();
+              updateStraightLine();
+              updateNearestEntryMarker();
+              updateActiveRouteLine();
+
+              if (isFPVEnabled && !isCameraFocusLocked) {
+                updateFPVCamera();
+              }
             }
           },
           (error) => {
@@ -3060,7 +2725,7 @@
         updateStraightLine();
         updateNearestEntryMarker();
         updateActiveRouteLine();
-        followCamera();
+        if (isFPVEnabled && !isCameraFocusLocked) updateFPVCamera();
         return;
       }
 
@@ -3078,7 +2743,7 @@
         updateStraightLine();
         updateNearestEntryMarker();
         updateActiveRouteLine();
-        followCamera();
+        if (isFPVEnabled && !isCameraFocusLocked) updateFPVCamera();
         return;
       }
 
@@ -3161,7 +2826,9 @@
           updateNearestEntryMarker();
           updateActiveRouteLine();
 
-          followCamera();
+          if (isFPVEnabled && !isCameraFocusLocked) {
+            updateFPVCamera();
+          }
         }
       }
 
